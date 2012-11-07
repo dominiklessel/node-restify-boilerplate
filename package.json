@@ -1,0 +1,14 @@
+{
+  "name" : "restify-boilerplate",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node server"
+  },
+  "dependencies": {
+    "restify"    : "1.4.4",
+    "nconf"      : "0.6.5",
+    "bunyan"     : "0.16.4",
+    "underscore" : "*"
+  }
+}
