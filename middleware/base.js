@@ -8,7 +8,7 @@ var v1 = {
 
   get : function( req, res, next ) {
     return res.send({
-      hello : 'world'
+      foo : 'bar'
     });
   }
 

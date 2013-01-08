@@ -21,25 +21,10 @@ nconf.file({
  */
 
 // logs thrown errors
-var ServerLog = bunyan.createLogger({
-  name    : 'ServerLog',
+var Logger = bunyan.createLogger({
+  name    : nconf.get('Logging:Name'),
   streams : [{
-    path  : path.join( __dirname, 'logs', 'server.log' )
-  }]
-});
-
-var AccessLog = bunyan.createLogger({
-  name    : 'AccessLog',
-  streams : [{
-    path  : path.join( __dirname, 'logs', 'access.log' )
-  }]
-});
-
-// global logger
-log = bunyan.createLogger({
-  name    : 'CustomLog',
-  streams : [{
-    path  : path.join( __dirname, 'logs', 'custom.log' )
+    path  : path.join( nconf.get('Logging:Dir'), nconf.get('Logging:File') )
   }]
 });
 
@@ -51,7 +36,7 @@ var server = restify.createServer({
   name       : nconf.get('Server:Name'),
   version    : nconf.get('Server:DefaultVersion'),
   acceptable : nconf.get('Server:Acceptable'),
-  log        : ServerLog
+  log        : Logger
 });
 
 /**
@@ -59,35 +44,33 @@ var server = restify.createServer({
  */
 
 server.use(
+  restify.gzipResponse()
+);
+
+server.use(
   restify.acceptParser( server.acceptable )
 );
 
 server.use(
-  require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError )
-);
-
-server.use(
-  restify.dateParser()
-);
-
-server.use(
-  restify.queryParser()
-);
-
-server.use(
-  restify.bodyParser()
-);
-
-server.use(
   restify.throttle({
-    burst : 100,
-    rate  : 50,
-    ip    : true
+    burst    : 100,
+    rate     : 50,
+    ip       : false,
+    username : true
   })
 );
 
+server.use( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
+server.use( restify.dateParser() );
+server.use( restify.queryParser() );
+server.use( restify.bodyParser() );
+
+/**
+ * Request / Response Logging
+ */
+
 server.on('after', restify.auditLogger({
-  log : AccessLog
+  log : Logger
 }));
 
 /**

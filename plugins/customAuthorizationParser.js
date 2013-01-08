@@ -29,7 +29,7 @@ var crypto = require('crypto');
 module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
   var parseAuthorization = function( req, res, next ) {
-  
+
     var credentialList = nconf.get('Security:Credentials'),
         error,
         authorizationPieces,
@@ -41,32 +41,24 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
     req.username      = 'anonymous';
 
     if ( !req.headers.authorization ) {
-      error = new InvalidHeaderError('Authorization header required.');
-      log.error( error );
-      return next( error );
+      return next( new InvalidHeaderError('Authorization header required.') );
     }
     
     authorizationPieces = req.headers.authorization.split(' ', 2);
 
     if ( !authorizationPieces || authorizationPieces.length !== 2 ) {
-      error = new InvalidHeaderError('Authorization header is invalid.');
-      log.error( error );
-      return next( error );
+      return next( new InvalidHeaderError('Authorization header is invalid.') );
     }
     
     req.authorization.scheme      = authorizationPieces[0];
     req.authorization.credentials = authorizationPieces[1];
 
     if ( req.authorization.scheme !== nconf.get('Security:Scheme') ) {
-      error = new InvalidHeaderError('Authorization scheme is invalid.');
-      log.error( error );
-      return next( error );
+      return next( new InvalidHeaderError('Authorization scheme is invalid.') );
     }
 
-    if ( !req.headers[ nconf.get('Security:DateIdentifier') ] ) {
-      error = new InvalidHeaderError('Authorization header is invalid: "' + nconf.get('Security:DateIdentifier') + '" missing');
-      log.error( error );
-      return next( error );
+    if ( !req.headers[ nconf.get('Security:DateIdentifier').toLowerCase() ] ) {
+      return next( new InvalidHeaderError('Authorization header is invalid: "' + nconf.get('Security:DateIdentifier') + '" missing') );
     }
 
     req.authorization[ req.authorization.scheme ] = {
@@ -77,9 +69,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // check if key is known & grab infos
     if ( !credentialList[ req.authorization[req.authorization.scheme].key ] ) {
-      error = new NotAuthorizedError('Authorization key unknown.');
-      log.error( error );
-      return next( error );
+      return next( new NotAuthorizedError('Authorization key unknown.') );
     }
     secret                    = credentialList[ req.authorization[req.authorization.scheme].key ].secret;
     req.username              = credentialList[ req.authorization[req.authorization.scheme].key ].username;
@@ -93,9 +83,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // check signature
     if ( checkSignatureBase64 !== req.authorization[ req.authorization.scheme ].signature ) {
-      error = new NotAuthorizedError('Authorization signature is invalid.');
-      log.error( error );
-      return next( error );
+      return next( new NotAuthorizedError('Authorization signature is invalid.') );
     }
 
     return next();

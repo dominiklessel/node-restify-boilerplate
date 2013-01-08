@@ -5,11 +5,24 @@
     "DefaultVersion" : "1.0.0",
     "Acceptable"     : [ "application/json" ]
   },
+  "Logging" : {
+    "Name"        : "ApiLogging",
+    "Dir"         : "./logs/",
+    "File"        : "api.example.com.log"
+  },
   "Security" : {
     "Scheme"         : "Custom",
     "DateIdentifier" : "X-Custom-Date",
+    
     "Credentials" : {
-      "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd" : { "username" : "dominik", "secret" : "33yrDBjjw9grl3vNZn0a63Ctqf0=", "admin" : true }
+      "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd" : {
+        "username"      : "dominik",
+        "secret"        : "33yrDBjjw9grl3vNZn0a63Ctqf0=",
+        "throttleRate"  : 1000,
+        "throttleBurst" : 10000,
+        "admin"         : true
+      }
     }
+
   }
 }

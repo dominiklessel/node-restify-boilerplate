@@ -6,9 +6,9 @@
     "start": "node server"
   },
   "dependencies": {
-    "restify"    : "1.4.4",
+    "restify"    : "git://github.com/mcavage/node-restify.git#v2.0.2",
     "nconf"      : "0.6.5",
-    "bunyan"     : "0.16.4",
+    "bunyan"     : "git://github.com/trentm/node-bunyan.git#0.17.0",
     "underscore" : "*"
   }
 }
