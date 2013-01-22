@@ -1,14 +1,14 @@
 {
   "name" : "restify-boilerplate",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "start": "node server"
   },
   "dependencies": {
-    "restify"    : "git://github.com/mcavage/node-restify.git#v2.0.2",
+    "restify"    : "2.0.4",
     "nconf"      : "0.6.5",
-    "bunyan"     : "git://github.com/trentm/node-bunyan.git#0.17.0",
+    "bunyan"     : "0.17.0",
     "underscore" : "*"
   }
 }

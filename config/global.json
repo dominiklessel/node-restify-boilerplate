@@ -3,7 +3,9 @@
     "Port"           : 8080,
     "Name"           : "api.example.com",
     "DefaultVersion" : "1.0.0",
-    "Acceptable"     : [ "application/json" ]
+    "Acceptable"     : [ "application/json" ],
+    "ThrottleRate"   : 50,
+    "ThrottleBurst"  : 100
   },
   "Logging" : {
     "Name"        : "ApiLogging",

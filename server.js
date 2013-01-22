@@ -43,27 +43,16 @@ var server = restify.createServer({
  * Server plugins
  */
 
-server.use(
+server.use([
+  restify.acceptParser( server.acceptable ),
+  restify.throttle({ rate : nconf.get('Server:ThrottleRate'), burst: nconf.get('Server:ThrottleBurst'), ip : false, username : true }),
+  restify.dateParser(),
+  restify.queryParser(),
+  restify.fullResponse(),
+  require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ),
+  restify.bodyParser(),
   restify.gzipResponse()
-);
-
-server.use(
-  restify.acceptParser( server.acceptable )
-);
-
-server.use(
-  restify.throttle({
-    burst    : 100,
-    rate     : 50,
-    ip       : false,
-    username : true
-  })
-);
-
-server.use( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
-server.use( restify.dateParser() );
-server.use( restify.queryParser() );
-server.use( restify.bodyParser() );
+]);
 
 /**
  * Request / Response Logging
