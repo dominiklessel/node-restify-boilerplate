@@ -81,7 +81,7 @@ server.on('after', restify.auditLogger({
  */
 
 var middlewareList = [
-  'base'
+  'root'
 ].map(function ( middlewareName ) {
   var middleware;
   middleware = require( path.join(__dirname, 'middleware', middlewareName) );
