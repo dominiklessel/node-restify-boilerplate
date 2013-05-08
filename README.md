@@ -21,3 +21,17 @@ Authorization: <Config/Security/Scheme> <AccessKey>:<Signature(Base64(HMAC-SHA1(
 AccessKey: Provided by `config/global.json`  
 SecretAccessKey: Provided by `config/global.json`  
 String to Sign: Value of the `<Config/Security/DateIdentifier>` header
+
+## Enviroments
+
+`NODE_ENV` is not yet used to allow different configurations for developemnt / production. The only thing it does is disabling the Auth- and CORS-Plugin in development.
+
+```
+$ NODE_ENV=production node server
+```
+
+vs.
+
+```
+$node server
+```

@@ -56,17 +56,23 @@ var corsOptions = {
   headers: nconf.get('CORS:Headers'),
 };
 
-server.use([
+var plugins = [
   restify.acceptParser( server.acceptable ),
   restify.throttle( throttleOptions ),
   restify.dateParser(),
   restify.queryParser(),
-  restify.fullResponse(),
-  restify.CORS( corsOptions ),
-  require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ),
-  restify.bodyParser(),
-  restify.gzipResponse()
-]);
+  restify.fullResponse()
+];
+
+if ( process.env.NODE_ENV && process.env.NODE_ENV === 'production' ) {
+  plugins.push( restify.CORS(corsOptions) );
+  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
+}
+
+plugins.push( restify.bodyParser() );
+plugins.push( restify.gzipResponse() );
+
+server.use( plugins );
 
 /**
  * Request / Response Logging
