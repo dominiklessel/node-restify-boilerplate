@@ -12,6 +12,11 @@
     "Dir"         : "./logs/",
     "File"        : "api.example.com.log"
   },
+  "CORS" : {
+    "Credentials" : false,
+    "Origins" : [],
+    "Headers" : []
+  },
   "Security" : {
     "Scheme"         : "Custom",
     "DateIdentifier" : "X-Custom-Date",

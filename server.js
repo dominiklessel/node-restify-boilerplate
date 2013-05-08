@@ -43,12 +43,26 @@ var server = restify.createServer({
  * Server plugins
  */
 
+var throttleOptions = {
+  rate: nconf.get('Server:ThrottleRate'),
+  burst: nconf.get('Server:ThrottleBurst'),
+  ip: false,
+  username: true
+};
+
+var corsOptions = {
+  origins: nconf.get('CORS:Origins'),
+  credentials: nconf.get('CORS:Credentials'),
+  headers: nconf.get('CORS:Headers'),
+};
+
 server.use([
   restify.acceptParser( server.acceptable ),
-  restify.throttle({ rate : nconf.get('Server:ThrottleRate'), burst: nconf.get('Server:ThrottleBurst'), ip : false, username : true }),
+  restify.throttle( throttleOptions ),
   restify.dateParser(),
   restify.queryParser(),
   restify.fullResponse(),
+  restify.CORS( corsOptions ),
   require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ),
   restify.bodyParser(),
   restify.gzipResponse()
@@ -78,4 +92,6 @@ var middlewareList = [
  * Listen
  */
 
-server.listen( nconf.get('Server:Port') );
+server.listen( nconf.get('Server:Port'), function() {
+  console.log('listening: %s', server.url);
+});
