@@ -43,13 +43,13 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
     if ( !req.headers.authorization ) {
       return next( new InvalidHeaderError('Authorization header required.') );
     }
-    
+
     authorizationPieces = req.headers.authorization.split(' ', 2);
 
     if ( !authorizationPieces || authorizationPieces.length !== 2 ) {
       return next( new InvalidHeaderError('Authorization header is invalid.') );
     }
-    
+
     req.authorization.scheme      = authorizationPieces[0];
     req.authorization.credentials = authorizationPieces[1];
 
@@ -64,7 +64,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
     req.authorization[ req.authorization.scheme ] = {
       key       : req.authorization.credentials.split(':', 2)[0],
       signature : req.authorization.credentials.split(':', 2)[1],
-      date      : req.headers[ nconf.get('Security:DateIdentifier') ]
+      date      : req.headers[ nconf.get('Security:DateIdentifier').toLowerCase() ]
     };
 
     // check if key is known & grab infos
