@@ -1,6 +1,6 @@
 # restify API boilerplate
 
-Get your [restify](https://github.com/mcavage/node-restify) API up and running in no time :) Most of the things the boilerplate does should be self-explaining. If not: [AMA](mailto:dominik@rocketeleven.de?subject=Question:%20restify%20API%20boilerplate)
+Get your [restify](https://github.com/mcavage/node-restify) API up and running in no time :) Most of the things the boilerplate does should be self-explaining. If not: [AMA](mailto:dominik@mifitto.com?subject=Question:%20restify%20API%20boilerplate)
 
 I included a custom authorization plugin, which is enabled by default. Feel free to modify its settings inside `config/global.json`
 
