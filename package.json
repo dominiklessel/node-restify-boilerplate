@@ -6,9 +6,9 @@
     "start": "node server"
   },
   "dependencies": {
-    "restify"    : "2.5.0",
-    "nconf"      : "0.6.7",
-    "bunyan"     : "0.21.1",
-    "underscore" : "*"
+    "restify": "2.6.0",
+    "nconf": "0.6.7",
+    "bunyan": "0.21.3",
+    "lodash": "*"
   }
 }
