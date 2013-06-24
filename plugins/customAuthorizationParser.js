@@ -3,7 +3,7 @@
  * Module dependencies.
  */
 
-var _ = require('underscore')._;
+var _ = require('lodash');
 var crypto = require('crypto');
 
 /**
