@@ -3,10 +3,11 @@
  * Module dependencies.
  */
 
+nconf       = require('nconf'); // global
+
 var path    = require('path');
 var restify = require('restify');
 var bunyan  = require('bunyan');
-nconf       = require('nconf'); // global
 
 /**
  * Config
@@ -20,12 +21,13 @@ nconf.file({
  * Logging
  */
 
-// logs thrown errors
+var LogglyStream = require( path.join(__dirname, 'helpers', 'logglyStream.js') );
 var Logger = bunyan.createLogger({
-  name    : nconf.get('Logging:Name'),
-  streams : [{
-    path  : path.join( nconf.get('Logging:Dir'), nconf.get('Logging:File') )
-  }]
+  name: nconf.get('Logging:Name'),
+  streams: [
+    { path: path.join(nconf.get('Logging:Dir'),nconf.get('Logging:File')) },
+    { type: 'raw', stream: new LogglyStream() }
+  ]
 });
 
 /**
