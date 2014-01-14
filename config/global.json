@@ -1,32 +1,29 @@
 {
-  "Server" : {
-    "Port"           : 8080,
-    "Name"           : "api.example.com",
-    "DefaultVersion" : "1.0.0",
-    "Acceptable"     : [ "application/json" ],
-    "ThrottleRate"   : 50,
-    "ThrottleBurst"  : 100
+  "Server": {
+    "Port": 8080,
+    "Name": "api.example.com",
+    "DefaultVersion": "1.0.0",
+    "Acceptable": [ "application/json" ],
+    "ThrottleRate": 50,
+    "ThrottleBurst": 100
   },
-  "Logging" : {
-    "Name"        : "ApiLogging",
-    "Dir"         : "./logs/",
-    "File"        : "api.example.com.log"
+  "Logging": {
+    "Name": "ApiLogging",
+    "Dir": "./logs/",
+    "File": "api.example.com.log",
+    "LogglyEndpoint": ""
   },
-  "CORS" : {
-    "Credentials" : false,
-    "Origins" : [],
-    "Headers" : []
+  "CORS": {
+    "Credentials": false,
+    "Origins": [],
+    "Headers": []
   },
-  "Security" : {
-
-    "Scheme"         : "Custom",
-    "DateIdentifier" : "X-Custom-Date",
-    
-    "Credentials" : {
+  "Security": {
+    "Scheme": "Custom",
+    "DateIdentifier": "X-Custom-Date",
+    "Credentials": {
       "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd" : {
-        "username"      : "dominik",
-        "secret"        : "33yrDBjjw9grl3vNZn0a63Ctqf0=",
-        "admin"         : true
+        "username": "dominik", "secret": "33yrDBjjw9grl3vNZn0a63Ctqf0=", "admin": true
       }
     }
 
