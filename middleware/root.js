@@ -1,18 +1,25 @@
 
 /**
- * Route   : /
- * Version : 1.0.0
+ * Version: 1.0.0
  */
 
 var v1 = {
-
-  get : function( req, res, next ) {
-    return res.send({
-      foo : 'bar'
-    });
-  }
-
+  version: '1.0.0',
+  path: '/'
 };
+
+/**
+ * Route: /
+ * Version: 1.0.0
+ */
+
+v1.get = function( req, res, next ) {
+  res.send({
+    foo: 'bar'
+  });
+  return next();
+};
+
 
 /**
  * Setup
@@ -21,7 +28,10 @@ var v1 = {
 exports.setup = function ( server ) {
 
   server.get(
-    { path : '/', version : '1.0.0' },
+    {
+      path: v1.path,
+      version: v1.version
+    },
     v1.get
   );
 
