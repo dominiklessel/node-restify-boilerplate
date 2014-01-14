@@ -1,25 +1,28 @@
 
 /**
- * Version: 1.0.0
+ * Routes
  */
 
-var v1 = {
-  version: '1.0.0',
-  path: '/'
-};
+var routes = [];
 
 /**
- * Route: /
+ * GET /
  * Version: 1.0.0
  */
 
-v1.get = function( req, res, next ) {
-  res.send({
-    foo: 'bar'
-  });
-  return next();
-};
-
+routes.push({
+  meta: {
+    method: 'GET',
+    path: '/',
+    version: '1.0.0',
+  },
+  middleware: function( req, res, next ) {
+    res.send({
+      foo: 'bar'
+    });
+    return next();
+  }
+});
 
 /**
  * Setup
@@ -27,12 +30,14 @@ v1.get = function( req, res, next ) {
 
 exports.setup = function ( server ) {
 
-  server.get(
-    {
-      path: v1.path,
-      version: v1.version
-    },
-    v1.get
-  );
+  routes.forEach(function( route ) {
+    server[route.meta.method.toLowerCase()](
+      {
+        path: route.meta.path,
+        version: route.meta.version
+      },
+      route.middleware
+    );
+  });
 
 };
