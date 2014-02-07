@@ -1,6 +1,6 @@
 {
   "name": "node-restify-boilerplate",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "node server"
