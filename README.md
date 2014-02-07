@@ -1,6 +1,6 @@
-# restify API boilerplate
+# restify Boilerplate
 
-[![Dependency Status](https://gemnasium.com/dominiklessel/restify-api-boilerplate.png)](https://gemnasium.com/dominiklessel/restify-api-boilerplate)
+[![Dependency Status](https://gemnasium.com/dominiklessel/restify-api-boilerplate.png)](https://gemnasium.com/dominiklessel/node-restify-boilerplate)
 
 Get your [restify](https://github.com/mcavage/node-restify) API up and running in no time :) Most of the things the boilerplate does should be self-explaining. If not: [AMA](mailto:dominik@mifitto.com?subject=Question:%20restify%20API%20boilerplate)
 
