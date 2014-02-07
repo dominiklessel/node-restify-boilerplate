@@ -1,4 +1,7 @@
 {
+  "App": {
+    "Name": "api-example-com"
+  },
   "Server": {
     "Port": 8080,
     "Name": "api.example.com",
@@ -8,10 +11,13 @@
     "ThrottleBurst": 100
   },
   "Logging": {
-    "Name": "ApiLogging",
+    "Name": "AuditLogging",
     "Dir": "./logs/",
-    "File": "api.example.com.log",
-    "LogglyEndpoint": ""
+    "Loggly": {
+      "Enabled": false,
+      "Tags": [ "api-example-com" ],
+      "Endpoint": "https://logs-01.loggly.com/inputs/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/"
+    }
   },
   "CORS": {
     "Credentials": false,

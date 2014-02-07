@@ -3,24 +3,40 @@
  * Module dependencies.
  */
 
+var util = require('util');
 var request = require('request');
-var endpoint = nconf.get('Logging:LogglyEndpoint');
 
 /**
  * Logger
  */
 
-var LogglyStream = function() {};
+var LogglyStream = function() {
+
+  this.options = {
+    enabled: nconf.get('Logging:Loggly:Enabled'),
+    tags: nconf.get('Logging:Loggly:Tags').concat( [process.env.NODE_ENV] ),
+    endpoint: nconf.get('Logging:Loggly:Endpoint'),
+  };
+
+  this.options.endpoint = util.format( '%stag/%s', this.options.endpoint, this.options.tags.join(',') );
+
+};
 
 LogglyStream.prototype.write = function( record ) {
 
-  if ( !endpoint || 'object' !== typeof(record) ) {
+  if ( !this.options.enabled || 'object' !== typeof(record) ) {
     return;
   }
 
-  request({ method: 'POST', uri: endpoint, json: record }, function( err, response, body ) {
+  var requestObject = {
+    method: 'POST',
+    uri: this.options.endpoint,
+    json: record
+  };
+
+  request(requestObject, function( err, response, body ) {
     if ( err ) {
-      console.log( 'LogglyStream Error:' );
+      console.log( 'LogglyStream - Error:' );
       console.error( err );
     }
   });

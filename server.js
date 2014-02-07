@@ -1,5 +1,13 @@
 
 /**
+ * Preflight-checks
+ */
+
+if ( !process.env.NODE_ENV ) {
+  process.env.NODE_ENV = 'development';
+}
+
+/**
  * Module dependencies.
  */
 
@@ -24,8 +32,12 @@ nconf.file({
 var LogglyStream = require( path.join(__dirname, 'helpers', 'logglyStream.js') );
 var Logger = bunyan.createLogger({
   name: nconf.get('Logging:Name'),
+  serializers: {
+    req: bunyan.stdSerializers.req,
+    res: bunyan.stdSerializers.res
+  },
   streams: [
-    { path: path.join(nconf.get('Logging:Dir'),nconf.get('Logging:File')) },
+    { path: path.join(nconf.get('Logging:Dir'),process.env.NODE_ENV+'-'+nconf.get('Server:Name')+'.log') },
     { type: 'raw', stream: new LogglyStream() }
   ]
 });
@@ -66,7 +78,7 @@ var plugins = [
   restify.fullResponse()
 ];
 
-if ( process.env.NODE_ENV && process.env.NODE_ENV === 'production' ) {
+if ( process.env.NODE_ENV === 'production' ) {
   plugins.push( restify.CORS(corsOptions) );
   plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
 }
@@ -81,7 +93,7 @@ server.use( plugins );
  */
 
 server.on('after', restify.auditLogger({
-  log : Logger
+  log: Logger
 }));
 
 /**
@@ -101,5 +113,7 @@ var middlewareList = [
  */
 
 server.listen( nconf.get('Server:Port'), function() {
-  console.log('listening: %s', server.url);
+  console.log();
+  console.log( '%s now listening on %s', nconf.get('App:Name'), server.url );
+  console.log();
 });
