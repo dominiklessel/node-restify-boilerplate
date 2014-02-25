@@ -79,13 +79,13 @@ var plugins = [
 ];
 
 if ( process.env.NODE_ENV === 'production' ) {
-  plugins.push( restify.CORS(corsOptions) );
   plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
 }
 
 plugins.push( restify.bodyParser() );
 plugins.push( restify.gzipResponse() );
 
+server.pre( restify.CORS(corsOptions) );
 server.use( plugins );
 
 /**
