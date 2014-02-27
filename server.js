@@ -64,12 +64,6 @@ var throttleOptions = {
   username: true
 };
 
-var corsOptions = {
-  origins: nconf.get('CORS:Origins'),
-  credentials: nconf.get('CORS:Credentials'),
-  headers: nconf.get('CORS:Headers'),
-};
-
 var plugins = [
   restify.acceptParser( server.acceptable ),
   restify.throttle( throttleOptions ),
@@ -85,8 +79,24 @@ if ( process.env.NODE_ENV === 'production' ) {
 plugins.push( restify.bodyParser() );
 plugins.push( restify.gzipResponse() );
 
-server.pre( restify.CORS(corsOptions) );
+
 server.use( plugins );
+
+/**
+ * CORS
+ */
+
+var corsOptions = {
+  origins: nconf.get('CORS:Origins'),
+  credentials: nconf.get('CORS:Credentials'),
+  headers: nconf.get('CORS:Headers'),
+};
+
+server.pre( restify.CORS(corsOptions) );
+
+if ( corsOptions.headers.length ) {
+  server.on('MethodNotAllowed', require( path.join(__dirname, 'helpers', 'corsHelper.js') )() );
+}
 
 /**
  * Request / Response Logging

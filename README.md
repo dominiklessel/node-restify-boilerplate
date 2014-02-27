@@ -8,9 +8,14 @@ I included a custom authorization plugin, which is enabled by default. Feel free
 
 ## Index
 
+- [CORS](#cors)
 - [Authorization](#authorization)
 - [Loging](#loging)
 - [Enviroments](#enviroments)
+
+## CORS
+
+Making CORS work properly if you use custom headers is not always straightforward ([restify / Issue #284](https://github.com/mcavage/node-restify/issues/284)). The boilerplate provides a helper, which takes care of MethodNotAllowed repsonses in conjunction with preflight requests.
 
 ## Authorization
 
