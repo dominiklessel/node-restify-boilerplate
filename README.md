@@ -31,6 +31,8 @@ AccessKey: Provided by `config/global.json`
 SecretAccessKey: Provided by `config/global.json`  
 String to Sign: Value of the `<Config/Security/DateIdentifier>` header
 
+You can find an example in the [examples/client](https://github.com/dominiklessel/node-restify-boilerplate/tree/examples/client) branch.
+
 ## Loging
 
 By default `node-bunyan` is used for logging to a file (`./logs/{{NODE_ENV}}-{{SERVER:NAME}}.log`). Additionally sending logs to Loggly is supported (take a look at the config file).
