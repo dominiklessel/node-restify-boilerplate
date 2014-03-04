@@ -1,0 +1,11 @@
+{
+  "name": "node-restify-boilerplate-client",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node client"
+  },
+  "dependencies": {
+    "restify": "2.6.x",
+  }
+}
