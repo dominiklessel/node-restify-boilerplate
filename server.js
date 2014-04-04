@@ -107,14 +107,14 @@ server.on('after', restify.auditLogger({
 }));
 
 /**
- * Server routes
+ * Middleware
  */
 
-var middlewareList = [
+[
   'root'
-].map(function ( middlewareName ) {
-  var middleware;
-  middleware = require( path.join(__dirname, 'middleware', middlewareName) );
+]
+.map(function ( middlewareName ) {
+  var middleware = require( path.join(__dirname, 'middleware', middlewareName) );
   return middleware.setup( server );
 });
 
