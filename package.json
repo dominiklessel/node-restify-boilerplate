@@ -11,5 +11,8 @@
     "bunyan": "0.22.x",
     "request": "2.34.x",
     "lodash": "*"
+  },
+  "jshintConfig": {
+    "globals": { "nconf": true }
   }
 }
