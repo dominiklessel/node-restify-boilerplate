@@ -3,7 +3,6 @@
  * Module dependencies.
  */
 
-var _ = require('lodash');
 var crypto = require('crypto');
 
 /**
