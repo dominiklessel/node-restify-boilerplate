@@ -1,4 +1,6 @@
 
+'use strict';
+
 /**
  * Preflight-checks
  */
@@ -110,13 +112,16 @@ server.on('after', restify.auditLogger({
  * Middleware
  */
 
-[
-  'root'
-]
-.map(function ( middlewareName ) {
+var setupMiddleware = function ( middlewareName ) {
   var middleware = require( path.join(__dirname, 'middleware', middlewareName) );
   return middleware.setup( server );
-});
+};
+
+[
+  'root',
+  // ... more middleware ... //
+]
+.map( setupMiddleware );
 
 /**
  * Listen
