@@ -36,7 +36,7 @@ LogglyStream.prototype.write = function( record ) {
     json: record
   };
 
-  request(requestObject, function( err, response, body ) {
+  request(requestObject, function( err ) {
     if ( err ) {
       console.log( 'LogglyStream - Error:' );
       console.error( err );

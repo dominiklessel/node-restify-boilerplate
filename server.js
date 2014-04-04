@@ -13,7 +13,7 @@ if ( !process.env.NODE_ENV ) {
  * Module dependencies.
  */
 
-nconf       = require('nconf'); // global
+global.nconf = require('nconf');
 
 var path    = require('path');
 var restify = require('restify');

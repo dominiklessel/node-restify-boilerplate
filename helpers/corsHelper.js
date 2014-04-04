@@ -18,7 +18,7 @@ var CORSHelper = function( options ) {
 
   var unknownMethodHandler = function( req, res ) {
 
-    var origin = req.headers['origin'];
+    var origin = req.headers.origin;
     var originAllowed = false;
 
     // Skip if it's not a preflight request

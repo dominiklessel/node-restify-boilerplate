@@ -32,7 +32,6 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
   var parseAuthorization = function( req, res, next ) {
 
     var credentialList = nconf.get('Security:Credentials'),
-        error,
         authorizationPieces,
         secret,
         checkSignatureString,
