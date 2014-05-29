@@ -14,8 +14,11 @@ var routes = [];
 
 routes.push({
   meta: {
+    name: 'getRoot',
     method: 'GET',
-    path: '/',
+    paths: [
+      '/'
+    ],
     version: '1.0.0',
   },
   middleware: function( req, res, next ) {
@@ -31,15 +34,14 @@ routes.push({
  */
 
 exports.setup = function ( server ) {
-
   routes.forEach(function( route ) {
-    server[route.meta.method.toLowerCase()](
-      {
-        path: route.meta.path,
+    route.meta.paths.forEach(function( aPath ) {
+      route.meta.method = route.meta.method.toLowerCase();
+      server[route.meta.method]({
+        name: route.meta.name,
+        path: aPath,
         version: route.meta.version
-      },
-      route.middleware
-    );
+      }, route.middleware );
+    });
   });
-
 };
