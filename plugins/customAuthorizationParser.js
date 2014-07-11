@@ -6,6 +6,45 @@
  */
 
 var crypto = require('crypto');
+var path = require('path');
+
+var _ = require('lodash');
+var nconf = require('nconf').file({
+  file: path.join( __dirname, '..', 'config', 'global.json' )
+});
+
+/**
+ * Returns auth header pieces
+ */
+
+var parseAuthHeader = function( authorizationHeader ) {
+
+  authorizationHeader = authorizationHeader.split( ' ', 2 );
+
+  if ( authorizationHeader.length !== 2 ) {
+    return null;
+  }
+
+  return {
+    raw: authorizationHeader.join( ' ' ),
+    scheme: authorizationHeader[0],
+    key: authorizationHeader[1].split( ':' )[0],
+    signature: authorizationHeader[1].split( ':' )[1],
+  };
+
+};
+
+/**
+ * Returns a request signature
+ */
+
+var getSignature = function( key, secret, stringToSign ) {
+
+  var signatureString = new Buffer( crypto.createHmac( 'sha1', secret ).update( stringToSign ).digest('hex') ).toString( 'base64' );
+
+  return signatureString;
+
+};
 
 /**
  * Returns a plugin that will parse the client's Authorization header.
@@ -31,58 +70,68 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
   var parseAuthorization = function( req, res, next ) {
 
-    var credentialList = nconf.get('Security:Credentials'),
-        authorizationPieces,
-        secret,
-        checkSignatureString,
-        checkSignatureBase64;
+    var credentialList = nconf.get('Security:Users');
+    var authorizationHeader;
+    var user;
 
-    req.authorization = {};
-    req.username      = 'anonymous';
+    req.username = 'anonymous';
 
+    // Validate Headers
     if ( !req.headers.authorization ) {
       return next( new InvalidHeaderError('Authorization header required.') );
     }
 
-    authorizationPieces = req.headers.authorization.split(' ', 2);
+    if ( !req.headers[ nconf.get('Security:StringToSign').toLowerCase() ] ) {
+      return next( new InvalidHeaderError('Authorization wont work: "' + nconf.get('Security:StringToSign') + '" missing') );
+    }
 
-    if ( !authorizationPieces || authorizationPieces.length !== 2 ) {
+    // Parse auth header
+    authorizationHeader = parseAuthHeader( req.headers.authorization );
+
+    if ( authorizationHeader === null ) {
       return next( new InvalidHeaderError('Authorization header is invalid.') );
     }
 
-    req.authorization.scheme      = authorizationPieces[0];
-    req.authorization.credentials = authorizationPieces[1];
+    // Fill authorization object
+    req.authorization = {
+      scheme: authorizationHeader.scheme,
+      credentials: authorizationHeader.raw
+    };
 
-    if ( req.authorization.scheme !== nconf.get('Security:Scheme') ) {
+    // Validate authorization object
+    if ( req.authorization.scheme.toLowerCase() !== nconf.get('Security:Scheme').toLowerCase() ) {
       return next( new InvalidHeaderError('Authorization scheme is invalid.') );
     }
 
-    if ( !req.headers[ nconf.get('Security:DateIdentifier').toLowerCase() ] ) {
-      return next( new InvalidHeaderError('Authorization header is invalid: "' + nconf.get('Security:DateIdentifier') + '" missing') );
-    }
-
     req.authorization[ req.authorization.scheme ] = {
-      key       : req.authorization.credentials.split(':', 2)[0],
-      signature : req.authorization.credentials.split(':', 2)[1],
-      date      : req.headers[ nconf.get('Security:DateIdentifier').toLowerCase() ]
+      key       : authorizationHeader.key,
+      signature : authorizationHeader.signature,
+      date      : req.headers[ nconf.get('Security:StringToSign').toLowerCase() ]
     };
 
-    // check if key is known & grab infos
-    if ( !credentialList[ req.authorization[req.authorization.scheme].key ] ) {
+    // grab credentials
+    user = _.where( credentialList, {
+      key: req.authorization[req.authorization.scheme].key
+    }).pop();
+
+    // check user
+    if ( !user ) {
       return next( new NotAuthorizedError('Authorization key unknown.') );
     }
-    secret                    = credentialList[ req.authorization[req.authorization.scheme].key ].secret;
-    req.username              = credentialList[ req.authorization[req.authorization.scheme].key ].username;
-    req.authorization.isAdmin = credentialList[ req.authorization[req.authorization.scheme].key ].admin;
 
-    // calc check signature
-    checkSignatureString = crypto.createHmac('sha1', secret )
-                                 .update( req.authorization[ req.authorization.scheme ].date )
-                                 .digest('hex');
-    checkSignatureBase64 = new Buffer( checkSignatureString ).toString( 'base64' );
+    // Set user information
+    req.username = user.name;
+    req.user = user;
+
+    // Get check signature
+    var checkSignature = getSignature(
+      req.authorization[ req.authorization.scheme ].key,
+      user.secret,
+      req.authorization[ req.authorization.scheme ].date
+    );
 
     // check signature
-    if ( checkSignatureBase64 !== req.authorization[ req.authorization.scheme ].signature ) {
+    if ( checkSignature !== req.authorization[ req.authorization.scheme ].signature ) {
       return next( new NotAuthorizedError('Authorization signature is invalid.') );
     }
 

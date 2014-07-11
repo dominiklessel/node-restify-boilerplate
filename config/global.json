@@ -3,7 +3,7 @@
     "Name": "api-example-com"
   },
   "Server": {
-    "Port": 8080,
+    "Port": 1337,
     "Name": "api.example.com",
     "DefaultVersion": "1.0.0",
     "Acceptable": [ "application/json" ],
@@ -26,12 +26,36 @@
   },
   "Security": {
     "Scheme": "Custom",
-    "DateIdentifier": "X-Custom-Date",
-    "Credentials": {
-      "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd" : {
-        "username": "dominik", "secret": "33yrDBjjw9grl3vNZn0a63Ctqf0=", "admin": true
+    "StringToSign": "X-Custom-Date",
+    "Users": [
+      {
+        "name": "dominik",
+        "role": "admin",
+        "key": "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd",
+        "secret": "33yrDBjjw9grl3vNZn0a63Ctqf0="
+      },
+      {
+        "name": "not_dominik",
+        "role": "user",
+        "key": "df7cab0c18e3c3d82b977bcd667d1aeb70ada9fe",
+        "secret": "33yrDBjjw9grl3vNZn0a63Ctqf1"
       }
+    ],
+    "ACL": {
+      "Allow": [
+        {
+          "Roles": ["admin"],
+          "Allows": [
+            { "Resources":"*", "Permissions":"*" }
+          ]
+        },
+        {
+          "Roles": ["user"],
+          "Allows": [
+            { "Resources":"*", "Permissions":"get" }
+          ]
+        }
+      ]
     }
-
   }
 }

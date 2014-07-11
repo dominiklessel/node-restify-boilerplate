@@ -13,18 +13,12 @@ if ( !process.env.NODE_ENV ) {
  * Module dependencies.
  */
 
-global.nconf = require('nconf');
-
 var path    = require('path');
 var restify = require('restify');
 var bunyan  = require('bunyan');
 
-/**
- * Config
- */
-
-nconf.file({
-  file : path.join( __dirname, 'config', 'global.json' )
+var nconf = require('nconf').file({
+  file: path.join( __dirname, 'config', 'global.json' )
 });
 
 /**
@@ -127,8 +121,24 @@ var setupMiddleware = function ( middlewareName ) {
  * Listen
  */
 
-server.listen( nconf.get('Server:Port'), function() {
-  console.log();
-  console.log( '%s now listening on %s', nconf.get('App:Name'), server.url );
-  console.log();
-});
+
+var listen = function( done ) {
+  server.listen( nconf.get('Server:Port'), function() {
+    if ( done ) {
+      return done();
+    }
+    console.log();
+    console.log( '%s now listening on %s', nconf.get('App:Name'), server.url );
+    console.log();
+  });
+};
+
+if ( !module.parent ) {
+  listen();
+}
+
+/**
+ * Export
+ */
+
+module.exports.listen = listen;

@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "NODE_ENV=production mocha --reporter spec test/*.test.js"
   },
   "dependencies": {
     "restify": "2.8.x",
@@ -11,5 +12,8 @@
     "bunyan": "0.23.x",
     "request": "2.37.x",
     "lodash": "*"
+  },
+  "devDependencies": {
+    "supertest": "^0.13.0"
   }
 }

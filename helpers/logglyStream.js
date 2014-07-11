@@ -8,6 +8,12 @@
 var util = require('util');
 var request = require('request');
 
+var path = require('path');
+var nconf = require('nconf').file({
+  file: path.join( __dirname, '..', 'config', 'global.json' )
+});
+
+
 /**
  * Logger
  */
