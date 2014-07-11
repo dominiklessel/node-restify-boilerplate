@@ -8,8 +8,8 @@
   "dependencies": {
     "restify": "2.8.x",
     "nconf": "0.6.x",
-    "bunyan": "0.22.x",
-    "request": "2.36.x",
+    "bunyan": "0.23.x",
+    "request": "2.37.x",
     "lodash": "*"
   }
 }
