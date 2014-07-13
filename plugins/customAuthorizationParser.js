@@ -12,6 +12,7 @@ var _ = require('lodash');
 var nconf = require('nconf').file({
   file: path.join( __dirname, '..', 'config', 'global.json' )
 });
+var restify = require('restify');
 
 /**
  * Returns auth header pieces
@@ -78,18 +79,18 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // Validate Headers
     if ( !req.headers.authorization ) {
-      return next( new InvalidHeaderError('Authorization header required.') );
+      return next( new restify.InvalidHeaderError('Authorization header required.') );
     }
 
     if ( !req.headers[ nconf.get('Security:StringToSign').toLowerCase() ] ) {
-      return next( new InvalidHeaderError('Authorization wont work: "' + nconf.get('Security:StringToSign') + '" missing') );
+      return next( new restify.InvalidHeaderError('Authorization wont work: "' + nconf.get('Security:StringToSign') + '" missing') );
     }
 
     // Parse auth header
     authorizationHeader = parseAuthHeader( req.headers.authorization );
 
     if ( authorizationHeader === null ) {
-      return next( new InvalidHeaderError('Authorization header is invalid.') );
+      return next( new restify.InvalidHeaderError('Authorization header is invalid.') );
     }
 
     // Fill authorization object
@@ -100,7 +101,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // Validate authorization object
     if ( req.authorization.scheme.toLowerCase() !== nconf.get('Security:Scheme').toLowerCase() ) {
-      return next( new InvalidHeaderError('Authorization scheme is invalid.') );
+      return next( new restify.InvalidHeaderError('Authorization scheme is invalid.') );
     }
 
     req.authorization[ req.authorization.scheme ] = {
@@ -116,7 +117,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // check user
     if ( !user ) {
-      return next( new NotAuthorizedError('Authorization key unknown.') );
+      return next( new restify.NotAuthorizedError('Authorization key unknown.') );
     }
 
     // Set user information
@@ -132,7 +133,7 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
 
     // check signature
     if ( checkSignature !== req.authorization[ req.authorization.scheme ].signature ) {
-      return next( new NotAuthorizedError('Authorization signature is invalid.') );
+      return next( new restify.NotAuthorizedError('Authorization signature is invalid.') );
     }
 
     return next();

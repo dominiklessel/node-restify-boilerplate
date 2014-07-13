@@ -69,7 +69,7 @@ var plugins = [
 ];
 
 if ( process.env.NODE_ENV === 'production' ) {
-  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )( restify.InvalidHeaderError, restify.NotAuthorizedError ) );
+  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )() );
 }
 
 plugins.push( restify.bodyParser() );
