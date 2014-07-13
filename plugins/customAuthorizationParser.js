@@ -61,21 +61,28 @@ var getSignature = function( key, secret, stringToSign ) {
  *   }
  * }
  *
- * `req.username` will also be set, and defaults to 'anonymous'.
+ * `req.user` will also be set, and defaults to `{ name: 'anonymous' }`.
  *
  * @return {Function} restify handler.
  * @throws {TypeError} on bad input
  */
 
-module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
+module.exports = function() {
 
   var parseAuthorization = function( req, res, next ) {
 
     var credentialList = nconf.get('Security:Users');
+    var allowAnon = nconf.get('Security:AllowAnonymous');
     var authorizationHeader;
     var user;
 
-    req.username = 'anonymous';
+    // Skip if anonymous are allowed ...
+    if ( allowAnon && !req.headers.authorization ) {
+      req.user = {
+        name: 'anonymous'
+      };
+      return next();
+    }
 
     // Validate Headers
     if ( !req.headers.authorization ) {
@@ -121,7 +128,6 @@ module.exports = function( InvalidHeaderError, NotAuthorizedError ) {
     }
 
     // Set user information
-    req.username = user.name;
     req.user = user;
 
     // Get check signature
