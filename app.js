@@ -60,23 +60,17 @@ var throttleOptions = {
   username: true
 };
 
-var plugins = [
+server.use([
   restify.acceptParser( server.acceptable ),
   restify.throttle( throttleOptions ),
   restify.dateParser(),
   restify.queryParser(),
-  restify.fullResponse()
-];
-
-if ( process.env.NODE_ENV === 'production' ) {
-  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )() );
-}
-
-plugins.push( restify.bodyParser() );
-plugins.push( restify.gzipResponse() );
-
-
-server.use( plugins );
+  restify.fullResponse(),
+  require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )(),
+  require( path.join(__dirname, 'plugins', 'customACLPlugin') )(),
+  restify.bodyParser(),
+  restify.gzipResponse()
+]);
 
 /**
  * CORS

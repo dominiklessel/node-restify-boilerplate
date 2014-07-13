@@ -7,11 +7,12 @@
     "test": "NODE_ENV=production mocha --reporter spec test/*.test.js"
   },
   "dependencies": {
-    "restify": "2.8.x",
-    "nconf": "0.6.x",
+    "acl": "^0.4.2",
     "bunyan": "0.23.x",
+    "lodash": "*",
+    "nconf": "0.6.x",
     "request": "2.37.x",
-    "lodash": "*"
+    "restify": "2.8.x"
   },
   "devDependencies": {
     "supertest": "^0.13.0"

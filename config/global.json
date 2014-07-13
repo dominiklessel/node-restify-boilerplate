@@ -27,7 +27,12 @@
   "Security": {
     "Scheme": "Custom",
     "StringToSign": "X-Custom-Date",
+    "AllowAnonymous": true,
     "Users": [
+      {
+        "name": "anonymous",
+        "role": "anonymous"
+      },
       {
         "name": "dominik",
         "role": "admin",
@@ -42,17 +47,28 @@
       }
     ],
     "ACL": {
-      "Allow": [
+      "Rules": [
         {
-          "Roles": ["admin"],
-          "Allows": [
-            { "Resources":"*", "Permissions":"*" }
+          "roles": ["admin"],
+          "allows": [
+            {
+              "resources":[
+                "/"
+              ],
+              "permissions":"*"
+            }
           ]
         },
         {
-          "Roles": ["user"],
-          "Allows": [
-            { "Resources":"*", "Permissions":"get" }
+          "roles": ["user"],
+          "allows": [
+            { "resources":"*", "permissions":"get" }
+          ]
+        },
+        {
+          "roles": ["anonymous"],
+          "allows": [
+            { "resources":"/", "permissions":"get" }
           ]
         }
       ]
