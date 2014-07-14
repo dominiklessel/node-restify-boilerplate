@@ -61,6 +61,7 @@ module.exports = function( aclBackend ) {
     console.log({ acl: {
       user: req.user.name,
       path: req.path(),
+      route: req.route,
       method: req.method
     }});
 

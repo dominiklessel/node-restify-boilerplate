@@ -107,6 +107,7 @@ var setupMiddleware = function ( middlewareName ) {
 
 [
   'root',
+  'secret'
   // ... more middleware ... //
 ]
 .map( setupMiddleware );

@@ -53,7 +53,8 @@
           "allows": [
             {
               "resources":[
-                "/"
+                "/",
+                "/secret"
               ],
               "permissions":"*"
             }

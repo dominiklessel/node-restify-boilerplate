@@ -20,10 +20,8 @@ var request = require('supertest')('http://localhost:' + nconf.get('Server:Port'
  */
 
 var scheme = nconf.get('Security:Scheme');
-var dateIdentifier = 'X-Custom-Date';
-
-var key = 'df7cab0c18e3c3d82b977bcd667d1aeb70ada9fd';
-var secret = '33yrDBjjw9grl3vNZn0a63Ctqf0=';
+var stringTosing = nconf.get('Security:StringToSign');
+var users = nconf.get('Security:Users');
 
 /**
  * Signature
@@ -40,24 +38,29 @@ var getAuthorizationHeader = function( aScheme, aKey, aSecret, aStringToSign ) {
  * Auth config
  */
 
-var dateString = new Date().toUTCString();
+var stringToSign = new Date().toUTCString();
 var headers = {};
-headers.Authorization = getAuthorizationHeader( scheme, key, secret, dateString );
-headers[ dateIdentifier ] = dateString;
+
+users.forEach(function( user ) {
+  if ( !user.key || !user.secret ) {
+    return;
+  }
+  headers[user.name] = {};
+  headers[user.name].Authorization = getAuthorizationHeader( scheme, user.key, user.secret, stringToSign );
+  headers[user.name][stringTosing] = stringToSign;
+});
+
 
 /**
  * Export
  */
 
-module.exports.get = function( path, useCredentials ) {
+module.exports.get = function( path, user ) {
 
-  var get = request.get( path );
-
-  if ( useCredentials === true ) {
-    get
-      .set('authorization', headers.Authorization )
-      .set( dateIdentifier, headers[dateIdentifier] );
-  }
+  var get = request
+      .get( path )
+      .set('authorization', headers[user].Authorization )
+      .set( stringTosing, headers[user][stringTosing] );
 
   return get;
 
