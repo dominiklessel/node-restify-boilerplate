@@ -52,24 +52,35 @@
           "roles": ["admin"],
           "allows": [
             {
-              "resources":[
-                "/",
-                "/secret"
+              "resources": [
+                "/#1.0.0",
+                "/secret#1.0.0",
+                "/secret/:id#1.0.0"
               ],
-              "permissions":"*"
+              "permissions": "*"
             }
           ]
         },
         {
           "roles": ["user"],
           "allows": [
-            { "resources":"*", "permissions":"get" }
+            {
+              "resources": [
+                "/#1.0.0",
+                "/secret#1.0.0",
+                "/secret/:id#1.0.0"
+              ],
+              "permissions": "get"
+            }
           ]
         },
         {
           "roles": ["anonymous"],
           "allows": [
-            { "resources":"/", "permissions":"get" }
+            {
+              "resources": "/#1.0.0",
+              "permissions": "get"
+            }
           ]
         }
       ]

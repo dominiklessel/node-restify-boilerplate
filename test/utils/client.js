@@ -43,6 +43,9 @@ var headers = {};
 
 users.forEach(function( user ) {
   if ( !user.key || !user.secret ) {
+    headers[user.name] = {};
+    headers[user.name].Authorization = '';
+    headers[user.name][stringTosing] = '';
     return;
   }
   headers[user.name] = {};

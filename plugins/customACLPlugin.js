@@ -6,6 +6,7 @@
  */
 
 var path = require('path');
+var util = require('util');
 
 var nconf = require('nconf').file({
   file: path.join( __dirname, '..', 'config', 'global.json' )
@@ -58,14 +59,10 @@ module.exports = function( aclBackend ) {
 
     req.acl = getACLInstance( aclBackend );
 
-    console.log({ acl: {
-      user: req.user.name,
-      path: req.path(),
-      route: req.route,
-      method: req.method
-    }});
+    var resource = util.format( '%s#%s', req.route.path, req.route.version );
+    var permission = req.method.toLowerCase();
 
-    req.acl.isAllowed( req.user.name, req.path(), req.method.toLowerCase(), function( err, isAllowed ) {
+    req.acl.isAllowed( req.user.name, resource, permission, function( err, isAllowed ) {
       if ( !!err ) {
         console.log( err );
         return next( new restify.InternalError() );
