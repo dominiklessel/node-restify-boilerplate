@@ -25,6 +25,8 @@
     "Headers": []
   },
   "Security": {
+    "UseAuth": true,
+    "UseACL": true,
     "Scheme": "Custom",
     "StringToSign": "X-Custom-Date",
     "AllowAnonymous": true,

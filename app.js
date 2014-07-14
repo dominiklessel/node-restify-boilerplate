@@ -60,17 +60,26 @@ var throttleOptions = {
   username: true
 };
 
-server.use([
+var plugins = [
   restify.acceptParser( server.acceptable ),
   restify.throttle( throttleOptions ),
   restify.dateParser(),
   restify.queryParser(),
   restify.fullResponse(),
-  require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )(),
-  require( path.join(__dirname, 'plugins', 'customACLPlugin') )(),
-  restify.bodyParser(),
-  restify.gzipResponse()
-]);
+];
+
+if ( nconf.get('Security:UseAuth') ) {
+  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )() );
+}
+
+if ( nconf.get('Security:UseACL') ) {
+  plugins.push( require( path.join(__dirname, 'plugins', 'customACLPlugin') )() );
+}
+
+plugins.push( restify.bodyParser() );
+plugins.push( restify.gzipResponse() );
+
+server.use( plugins );
 
 /**
  * CORS
