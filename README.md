@@ -18,7 +18,9 @@ I included a custom authorization plugin, which is enabled by default. Feel free
 
 Making CORS work properly if you use custom headers is not always straightforward ([restify / Issue #284](https://github.com/mcavage/node-restify/issues/284)). The boilerplate provides a helper, which takes care of **MethodNotAllowed repsonses** in conjunction with **preflight requests + custom headers**.
 
-## Authorization
+## Authorization (v1.1.0)
+
+**Enable via `config.Security.UseAuth`**
 
 Every request you make must be authenticated. The REST API uses a custom HTTP scheme based on a keyed-HMAC (Hash Message Authentication Code) for authentication.
 
@@ -30,9 +32,15 @@ Authorization: <Config/Security/Scheme> <AccessKey>:<Signature(Base64(HMAC-SHA1(
 
 AccessKey: Provided by `config/global.json`  
 SecretAccessKey: Provided by `config/global.json`  
-String to Sign: Value of the `<Config/Security/DateIdentifier>` header
+String to Sign: Value of the `<Config/Security/StringToSign>` header
 
 You can find an example in the [examples/client](https://github.com/dominiklessel/node-restify-boilerplate/tree/examples/client) branch.
+
+## ACL (v1.1.0)
+
+**Enable via `config.Security.UseACL`**
+
+The Boilerplate now supports ACL via [node_acl](https://github.com/OptimalBits/node_acl). Take a look at `config/global.json` for configuration ...
 
 ## Loging
 
