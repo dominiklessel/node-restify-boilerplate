@@ -109,9 +109,29 @@ server.on('after', restify.auditLogger({
  * Middleware
  */
 
+var registerRoute = function( route ) {
+
+  var routeMethod = route.meta.method.toLowerCase();
+  var routeName = route.meta.name;
+  var routeVersion = route.meta.version;
+
+  route
+    .meta
+    .paths
+    .forEach(function( aPath ) {
+      var routeMeta = {
+        name: routeName,
+        path: aPath,
+        version: routeVersion
+      };
+      server[routeMethod]( routeMeta, route.middleware );
+    });
+
+};
+
 var setupMiddleware = function ( middlewareName ) {
-  var middleware = require( path.join(__dirname, 'middleware', middlewareName) );
-  return middleware.setup( server );
+  var routes = require( path.join(__dirname, 'middleware', middlewareName) );
+  routes.forEach( registerRoute );
 };
 
 [
@@ -119,7 +139,7 @@ var setupMiddleware = function ( middlewareName ) {
   'secret'
   // ... more middleware ... //
 ]
-.map( setupMiddleware );
+.forEach( setupMiddleware );
 
 /**
  * Listen

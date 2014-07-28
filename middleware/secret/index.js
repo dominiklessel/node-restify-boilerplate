@@ -52,18 +52,7 @@ routes.push({
 });
 
 /**
- * Setup
+ * Export
  */
 
-exports.setup = function ( server ) {
-  routes.forEach(function( route ) {
-    route.meta.paths.forEach(function( aPath ) {
-      route.meta.method = route.meta.method.toLowerCase();
-      server[route.meta.method]({
-        name: route.meta.name,
-        path: aPath,
-        version: route.meta.version
-      }, route.middleware );
-    });
-  });
-};
+module.exports = routes;
