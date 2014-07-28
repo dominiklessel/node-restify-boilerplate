@@ -11,7 +11,7 @@
     "bunyan": "0.23.x",
     "lodash": "*",
     "nconf": "0.6.x",
-    "request": "2.37.x",
+    "request": "2.39.x",
     "restify": "2.8.x"
   },
   "devDependencies": {
