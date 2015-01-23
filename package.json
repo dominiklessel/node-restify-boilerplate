@@ -1,6 +1,6 @@
 {
   "name": "node-restify-boilerplate",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "start": "node app",
@@ -10,12 +10,12 @@
     "acl": "0.4.x",
     "bunyan": "1.2.x",
     "lodash": "*",
-    "nconf": "0.6.x",
-    "request": "2.47.x",
+    "nconf": "0.7.x",
+    "request": "2.51.x",
     "restify": "2.8.x"
   },
   "devDependencies": {
-    "mocha": "^1.17.1",
-    "supertest": "^0.13.0"
+    "mocha": "2.1.x",
+    "supertest": "0.15.x"
   }
 }
