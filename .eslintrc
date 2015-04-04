@@ -8,5 +8,8 @@
     "no-extra-boolean-cast": false
   },
   "globals": {
+    "describe": false,
+    "before": false,
+    "it": false
   }
 }
