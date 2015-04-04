@@ -19,9 +19,9 @@ routes.push({
     paths: [
       '/secret'
     ],
-    version: '1.0.0',
+    version: '1.0.0'
   },
-  middleware: function( req, res, next ) {
+  middleware: function(req, res, next) {
     res.send({
       secret: 'foo, bar, baz and qux'
     });
@@ -41,9 +41,9 @@ routes.push({
     paths: [
       '/secret/:id'
     ],
-    version: '1.0.0',
+    version: '1.0.0'
   },
-  middleware: function( req, res, next ) {
+  middleware: function(req, res, next) {
     res.send({
       secret: 'foo, bar, baz and qux: ' + req.params.id
     });

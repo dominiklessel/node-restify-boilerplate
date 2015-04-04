@@ -10,9 +10,8 @@ var request = require('request');
 
 var path = require('path');
 var nconf = require('nconf').file({
-  file: path.join( __dirname, '..', 'config', 'global.json' )
+  file: path.join(__dirname, '..', 'config', 'global.json')
 });
-
 
 /**
  * Logger
@@ -22,17 +21,17 @@ var LogglyStream = function() {
 
   this.options = {
     enabled: nconf.get('Logging:Loggly:Enabled'),
-    tags: nconf.get('Logging:Loggly:Tags').concat( [process.env.NODE_ENV] ),
-    endpoint: nconf.get('Logging:Loggly:Endpoint'),
+    tags: nconf.get('Logging:Loggly:Tags').concat([process.env.NODE_ENV]),
+    endpoint: nconf.get('Logging:Loggly:Endpoint')
   };
 
-  this.options.endpoint = util.format( '%stag/%s', this.options.endpoint, this.options.tags.join(',') );
+  this.options.endpoint = util.format('%stag/%s', this.options.endpoint, this.options.tags.join(','));
 
 };
 
-LogglyStream.prototype.write = function( record ) {
+LogglyStream.prototype.write = function(record) {
 
-  if ( !this.options.enabled || 'object' !== typeof(record) ) {
+  if (!this.options.enabled || typeof (record) !== 'object') {
     return;
   }
 
@@ -42,10 +41,10 @@ LogglyStream.prototype.write = function( record ) {
     json: record
   };
 
-  request(requestObject, function( err ) {
-    if ( err ) {
-      console.log( 'LogglyStream - Error:' );
-      console.error( err );
+  request(requestObject, function(err) {
+    if (err) {
+      console.log('LogglyStream - Error:');
+      console.error(err);
     }
   });
 

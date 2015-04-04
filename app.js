@@ -5,7 +5,7 @@
  * Preflight-checks
  */
 
-if ( !process.env.NODE_ENV ) {
+if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
 }
 
@@ -13,19 +13,19 @@ if ( !process.env.NODE_ENV ) {
  * Module dependencies.
  */
 
-var path    = require('path');
+var path = require('path');
 var restify = require('restify');
-var bunyan  = require('bunyan');
+var bunyan = require('bunyan');
 
 var nconf = require('nconf').file({
-  file: path.join( __dirname, 'config', 'global.json' )
+  file: path.join(__dirname, 'config', 'global.json')
 });
 
 /**
  * Logging
  */
 
-var LogglyStream = require( path.join(__dirname, 'helpers', 'logglyStream.js') );
+var LogglyStream = require(path.join(__dirname, 'helpers', 'logglyStream.js'));
 var Logger = bunyan.createLogger({
   name: nconf.get('Logging:Name'),
   serializers: {
@@ -33,7 +33,7 @@ var Logger = bunyan.createLogger({
     res: bunyan.stdSerializers.res
   },
   streams: [
-    { path: path.join(nconf.get('Logging:Dir'),process.env.NODE_ENV+'-'+nconf.get('Server:Name')+'.log') },
+    { path: path.join(nconf.get('Logging:Dir'), process.env.NODE_ENV + '-' + nconf.get('Server:Name') + '.log') },
     { type: 'raw', stream: new LogglyStream() }
   ]
 });
@@ -43,10 +43,10 @@ var Logger = bunyan.createLogger({
  */
 
 var server = restify.createServer({
-  name       : nconf.get('Server:Name'),
-  version    : nconf.get('Server:DefaultVersion'),
-  acceptable : nconf.get('Server:Acceptable'),
-  log        : Logger
+  name: nconf.get('Server:Name'),
+  version: nconf.get('Server:DefaultVersion'),
+  acceptable: nconf.get('Server:Acceptable'),
+  log: Logger
 });
 
 /**
@@ -61,25 +61,25 @@ var throttleOptions = {
 };
 
 var plugins = [
-  restify.acceptParser( server.acceptable ),
-  restify.throttle( throttleOptions ),
+  restify.acceptParser(server.acceptable),
+  restify.throttle(throttleOptions),
   restify.dateParser(),
   restify.queryParser(),
-  restify.fullResponse(),
+  restify.fullResponse()
 ];
 
-if ( nconf.get('Security:UseAuth') ) {
-  plugins.push( require( path.join(__dirname, 'plugins', 'customAuthorizationParser') )() );
+if (nconf.get('Security:UseAuth')) {
+  plugins.push(require(path.join(__dirname, 'plugins', 'customAuthorizationParser'))());
 }
 
-if ( nconf.get('Security:UseACL') ) {
-  plugins.push( require( path.join(__dirname, 'plugins', 'customACLPlugin') )() );
+if (nconf.get('Security:UseACL')) {
+  plugins.push(require(path.join(__dirname, 'plugins', 'customACLPlugin'))());
 }
 
-plugins.push( restify.bodyParser() );
-plugins.push( restify.gzipResponse() );
+plugins.push(restify.bodyParser());
+plugins.push(restify.gzipResponse());
 
-server.use( plugins );
+server.use(plugins);
 
 /**
  * CORS
@@ -88,13 +88,13 @@ server.use( plugins );
 var corsOptions = {
   origins: nconf.get('CORS:Origins'),
   credentials: nconf.get('CORS:Credentials'),
-  headers: nconf.get('CORS:Headers'),
+  headers: nconf.get('CORS:Headers')
 };
 
-server.pre( restify.CORS(corsOptions) );
+server.pre(restify.CORS(corsOptions));
 
-if ( corsOptions.headers.length ) {
-  server.on('MethodNotAllowed', require( path.join(__dirname, 'helpers', 'corsHelper.js') )() );
+if (corsOptions.headers.length) {
+  server.on('MethodNotAllowed', require(path.join(__dirname, 'helpers', 'corsHelper.js'))());
 }
 
 /**
@@ -109,7 +109,7 @@ server.on('after', restify.auditLogger({
  * Middleware
  */
 
-var registerRoute = function( route ) {
+var registerRoute = function(route) {
 
   var routeMethod = route.meta.method.toLowerCase();
   var routeName = route.meta.name;
@@ -118,46 +118,47 @@ var registerRoute = function( route ) {
   route
     .meta
     .paths
-    .forEach(function( aPath ) {
+    .forEach(function(aPath) {
       var routeMeta = {
         name: routeName,
         path: aPath,
         version: routeVersion
       };
-      server[routeMethod]( routeMeta, route.middleware );
+      server[routeMethod](routeMeta, route.middleware);
     });
 
 };
 
-var setupMiddleware = function ( middlewareName ) {
-  var routes = require( path.join(__dirname, 'middleware', middlewareName) );
-  routes.forEach( registerRoute );
+var setupMiddleware = function(middlewareName) {
+  var routes = require(path.join(__dirname, 'middleware', middlewareName));
+  routes.forEach(registerRoute);
 };
 
 [
   'root',
   'secret'
+
   // ... more middleware ... //
 ]
-.forEach( setupMiddleware );
+.forEach(setupMiddleware);
 
 /**
  * Listen
  */
 
-
-var listen = function( done ) {
-  server.listen( nconf.get('Server:Port'), function() {
-    if ( done ) {
+var listen = function(done) {
+  server.listen(nconf.get('Server:Port'), function() {
+    if (done) {
       return done();
     }
+
     console.log();
-    console.log( '%s now listening on %s', nconf.get('App:Name'), server.url );
+    console.log('%s now listening on %s', nconf.get('App:Name'), server.url);
     console.log();
   });
 };
 
-if ( !module.parent ) {
+if (!module.parent) {
   listen();
 }
 

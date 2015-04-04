@@ -19,9 +19,9 @@ routes.push({
     paths: [
       '/'
     ],
-    version: '1.0.0',
+    version: '1.0.0'
   },
-  middleware: function( req, res, next ) {
+  middleware: function(req, res, next) {
     res.send({
       foo: 'bar'
     });

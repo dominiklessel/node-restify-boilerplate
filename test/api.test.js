@@ -8,10 +8,10 @@
 var path = require('path');
 var util = require('util');
 
-var pkg = require( path.join(__dirname,'..','package.json') );
+var pkg = require(path.join(__dirname, '..', 'package.json'));
 
 var nconf = require('nconf').file({
-  file : path.join( __dirname, '..', 'config', 'global.json' )
+  file: path.join(__dirname, '..', 'config', 'global.json')
 });
 
 /**
@@ -26,12 +26,12 @@ var testName = util.format(
 
 describe(testName, function() {
 
-  before(function( done ) {
-    require('../app').listen( done );
+  before(function(done) {
+    require('../app').listen(done);
   });
 
-  require( path.join( __dirname, 'routes', 'root' ) );
+  require(path.join(__dirname, 'routes', 'root'));
 
-  require( path.join( __dirname, 'routes', 'secret' ) );
+  require(path.join(__dirname, 'routes', 'secret'));
 
 });
