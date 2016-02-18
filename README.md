@@ -49,7 +49,7 @@ By default `node-bunyan` is used for logging to a file (`./logs/{{NODE_ENV}}-{{S
 
 ## Enviroments
 
-`NODE_ENV` is not yet used to allow different configurations for developemnt / production. The only thing it does is disabling the Auth- and CORS-Plugin in development.
+`NODE_ENV` is not yet used to allow different configurations for development / production. The only thing it does is disabling the Auth- and CORS-Plugin in development.
 
 ```
 $ NODE_ENV=production node server
