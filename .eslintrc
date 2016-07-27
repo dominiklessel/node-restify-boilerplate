@@ -5,7 +5,7 @@
   },
   "rules": {
     "quotes": [2, "single", "avoid-escape"],
-    "no-extra-boolean-cast": false
+    "no-extra-boolean-cast": 0
   },
   "globals": {
     "describe": false,

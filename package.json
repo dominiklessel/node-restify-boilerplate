@@ -1,7 +1,7 @@
 {
   "name": "node-restify-boilerplate",
   "version": "1.1.5",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "node app",
     "test": "make test"
