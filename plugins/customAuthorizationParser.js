@@ -118,9 +118,9 @@ module.exports = function() {
     };
 
     // grab credentials
-    user = _.where(credentialList, {
+    user = _.find(credentialList, {
       key: req.authorization[req.authorization.scheme].key
-    }).pop();
+    });
 
     // check user
     if (!user) {
